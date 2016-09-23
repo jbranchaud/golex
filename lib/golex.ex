@@ -16,6 +16,12 @@ defmodule Golex do
     end
   end
 
+  def step(board, 0), do: board
+  def step(board, steps) do
+    new_board = step(board)
+    step(new_board, steps - 1)
+  end
+
   defp update_cell(cell) do
     live_count = count_live_neighbors(cell)
     status = fetch_status(cell)

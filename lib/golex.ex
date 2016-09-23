@@ -7,14 +7,18 @@ defmodule Golex do
   def step(board) do
     for row <- 0..(length(board) - 1) do
       for column <- 0..(length(hd(board)) - 1) do
-        update_cell(row, column, board)
+        update_cell(%{
+          row: row,
+          column: column,
+          board: board
+        })
       end
     end
   end
 
-  defp update_cell(row, column, board) do
-    live_count = count_live_neighbors(row, column, board)
-    status = fetch_status(row, column, board)
+  defp update_cell(cell) do
+    live_count = count_live_neighbors(cell)
+    status = fetch_status(cell)
     apply_rules(live_count, status)
   end
 
@@ -31,7 +35,7 @@ defmodule Golex do
     end
   end
 
-  defp count_live_neighbors(row, column, board) do
+  defp count_live_neighbors(%{row: row, column: column, board: board}) do
     [
       {row - 1, column - 1},
       {row    , column - 1},
@@ -50,10 +54,14 @@ defmodule Golex do
   defp is_live({a, _b}, board) when a >= length(board), do: false
   defp is_live({_a, b}, board) when b >= length(hd(board)), do: false
   defp is_live({a, b}, board) do
-    fetch_status(a, b, board) == @live
+    fetch_status(%{
+      row: a,
+      column: b,
+      board: board
+    }) == @live
   end
 
-  defp fetch_status(row, column, board) do
+  defp fetch_status(%{row: row, column: column, board: board}) do
     board
     |> Enum.fetch!(row)
     |> Enum.fetch!(column)

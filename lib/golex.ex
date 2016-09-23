@@ -3,6 +3,8 @@ defmodule Golex do
 
   @live :x
   @dead :o
+  def live_atom, do: @live
+  def dead_atom, do: @dead
 
   def step(board) do
     for row <- 0..(length(board) - 1) do

@@ -1,0 +1,56 @@
+defmodule Golex do
+  @live :x
+  @dead :o
+
+  # Game Of Life
+  # 1. Any live cell with fewer than two live neighbors dies
+  # 2. Any live cell with two or three live neighbors lives
+  # 3. Any live cell with more than three live neighbors dies
+  # 4. Any dead cell with exactly three live neighbors becomes a live cell
+
+  def step(board) do
+    for row <- 0..(length(board) - 1) do
+      for column <- 0..(length(hd(board)) - 1) do
+        update_cell(row, column, board)
+      end
+    end
+  end
+
+  defp update_cell(row, column, board) do
+    live_count =
+    [
+      {row - 1, column - 1},
+      {row    , column - 1},
+      {row + 1, column - 1},
+      {row - 1, column    },
+      {row + 1, column    },
+      {row - 1, column + 1},
+      {row    , column + 1},
+      {row + 1, column + 1}
+    ]
+    |> Enum.count(&(is_live(&1, board)))
+
+    status = fetch_status(row, column, board)
+
+    case {live_count, status} do
+      {count, @live} when count < 2 -> @dead
+      {count, @live} when count > 3 -> @dead
+      {3    , @dead}                -> @live
+      _                             -> status
+    end
+  end
+
+  defp is_live({-1, _}, _board), do: false
+  defp is_live({_, -1}, _board), do: false
+  defp is_live({a, _b}, board) when a >= length(board), do: false
+  defp is_live({_a, b}, board) when b >= length(hd(board)), do: false
+  defp is_live({a, b}, board) do
+    fetch_status(a, b, board) == @live
+  end
+
+  defp fetch_status(row, column, board) do
+    board
+    |> Enum.fetch!(row)
+    |> Enum.fetch!(column)
+  end
+end

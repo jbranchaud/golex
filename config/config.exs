@@ -2,6 +2,12 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :golex,
+  internal_live_cell_character: "x",
+  internal_dead_cell_character: "o",
+  printable_live_cell_character: "•",
+  printable_dead_cell_character: " "
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

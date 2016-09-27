@@ -1,6 +1,6 @@
 defmodule PrintBoard do
-  def print(board), do: print(board, fetch_characters)
-  def print(board,
+  def format(board), do: format(board, fetch_characters)
+  def format(board,
    %{live_char: live_char,
      dead_char: dead_char,
      printable_live_char: printable_live_char,
@@ -14,6 +14,12 @@ defmodule PrintBoard do
       |> String.replace(dead_char, printable_dead_char)
       |> String.replace(live_char, printable_live_char)
     printable_board <> "\n"
+  end
+
+  def print(board, opts \\ %{}) do
+    board
+    |> format
+    |> IO.puts
   end
 
   defp fetch_characters do

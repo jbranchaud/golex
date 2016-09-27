@@ -22,7 +22,7 @@ ___
 ___
 """
 
-    assert printed_board == PrintBoard.print(board, context)
+    assert printed_board == PrintBoard.format(board, context)
   end
 
   test "print a board with some live cells", context do
@@ -37,6 +37,6 @@ _•_
 _•_
 """
 
-    assert printed_board == PrintBoard.print(board, context)
+    assert printed_board == PrintBoard.format(board, context)
   end
 end

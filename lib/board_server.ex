@@ -6,18 +6,21 @@ defmodule BoardServer do
   end
 
   def init(state) do
-    board = BoardFactory.create(:random, 10, 10)
+    board = BoardFactory.create(:random, 50, 50)
     PrintBoard.print(board)
+
+    GenServer.cast(self(), :step)
     {:ok, %{board: board}}
   end
 
-  def step(pid) do
-    GenServer.call(pid, :step)
+  defp schedule_next_step do
+    Process.send_after(self(), {:"$gen_cast", :step}, 1000)
   end
 
-  def handle_call(:step, _from, %{board: board}) do
+  def handle_cast(:step, %{board: board}) do
     board = Golex.step(board)
     PrintBoard.print(board)
-    {:reply, :ok, %{board: board}}
+    schedule_next_step()
+    {:noreply, %{board: board}}
   end
 end
